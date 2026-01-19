@@ -1,23 +1,20 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
   <title>Header Parser Microservice</title>
 </head>
 <body>
   <h1>Header Parser Microservice</h1>
-  <p>Click the button to get your IP, language, and software info.</p>
-  <button onclick="getInfo()">Get My Info</button>
+  <p>Click the button to get your IP, language, and software info:</p>
+  <button id="getInfo">Get My Info</button>
   <pre id="result"></pre>
 
   <script>
-    function getInfo() {
-      fetch('/api/whoami')
-        .then(res => res.json())
-        .then(data => {
-          document.getElementById('result').textContent = JSON.stringify(data, null, 2);
-        });
-    }
+    document.getElementById('getInfo').addEventListener('click', async () => {
+      const res = await fetch('/api/whoami');
+      const data = await res.json();
+      document.getElementById('result').textContent = JSON.stringify(data, null, 2);
+    });
   </script>
 </body>
 </html>

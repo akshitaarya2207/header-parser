@@ -2,19 +2,24 @@
 
 const express = require('express');
 const app = express();
+const path = require('path');
 
 // Serve static files from 'public' folder
 app.use(express.static('public'));
 
 // Root route - serves homepage
 app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/public/index.html');
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 // API endpoint - /api/whoami
 app.get('/api/whoami', (req, res) => {
-  // Get IP address (handle proxy)
-  const ipaddress = (req.headers['x-forwarded-for'] || req.socket.remoteAddress).split(',')[0].trim();
+  // Get IP address (handle proxy and IPv6)
+  let ipaddress = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+  ipaddress = ipaddress.split(',')[0].trim();
+  if (ipaddress.startsWith('::ffff:')) {
+    ipaddress = ipaddress.replace('::ffff:', '');
+  }
 
   // Get preferred language
   const language = req.headers['accept-language'];
